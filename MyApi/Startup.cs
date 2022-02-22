@@ -11,6 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using MyApi.Data;
 
 namespace MyApi
 {
@@ -32,10 +34,12 @@ namespace MyApi
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MyApi", Version = "v1" });
             });
+            services.AddDbContext<QuotesDBContext>(option =>
+                option.UseSqlServer(@"Data Source = (localdb)\MSSQLLocalDB;Initial Catalog = QuotesDB"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, QuotesDBContext quotesDbContext)
         {
             if (env.IsDevelopment())
             {
@@ -45,6 +49,8 @@ namespace MyApi
             }
 
             app.UseHttpsRedirection();
+
+            quotesDbContext.Database.EnsureCreated();
 
             app.UseRouting();
 

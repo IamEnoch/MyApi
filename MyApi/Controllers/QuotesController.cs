@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MyApi.Models;
 using System.Collections.Generic;
+using MyApi.Data;
 
 namespace MyApi.Controllers
 {
@@ -9,16 +10,18 @@ namespace MyApi.Controllers
     [ApiController]
     public class QuotesController : ControllerBase
     {
-        static List<Quote> _quotes = new List<Quote>()
+        private QuotesDBContext _quotesDbContext;
+
+        public QuotesController(QuotesDBContext quotesDbContext)
         {
-            new Quote(){Id = 0, Title = "Titel 1", Author = "John Doe", Desription = "Description 1"},
-            new Quote(){Id = 1, Title = "Title 2", Author = "Author 2", Desription = "Desciption 2"}
-        };
+            _quotesDbContext = quotesDbContext;
+        }
+
 
         [HttpGet]
         public IEnumerable<Quote> Get()
         {
-            return _quotes;
+            return _quotesDbContext.Quotes;
         }
 
         [HttpPost]
