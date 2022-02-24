@@ -19,42 +19,68 @@ namespace MyApi.Controllers
 
         //Get all quotes
         [HttpGet]
-        public IEnumerable<Quote> Get()
+        public IActionResult Get()
         {
-            return _quotesDbContext.Quotes;
+            return Ok(_quotesDbContext.Quotes);
         }
 
         //Get: a particular quote
         [HttpGet("{id}")]
-        public Quote Get(int id)
+        public IActionResult Get(int id)
         {
             var quote = _quotesDbContext.Quotes.Find(id);
-            return quote;
+            if (quote == null)
+            {
+                return NotFound("Item not found");
+            }
+            else
+            {
+                return Ok(quote);
+            }
         }
 
         [HttpPost]
-        public void Post([FromBody]Quote quote)
+        public IActionResult Post([FromBody]Quote quote)
         {
-            _quotesDbContext.Quotes.Add(quote);
+
+            var _quote = _quotesDbContext.Quotes.Add(quote);
             _quotesDbContext.SaveChanges();
+            return StatusCode(StatusCodes.Status201Created);
         }
 
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]Quote quote)
+        public IActionResult Put(int id, [FromBody]Quote quote)
         {
             var entity = _quotesDbContext.Quotes.Find(id);
-            entity.Title = quote.Title;
-            entity.Author = quote.Author;
-            entity.Desription = quote.Desription;
-            _quotesDbContext.SaveChanges();
+            if (entity == null)
+            {
+                return NotFound("No record found against this id....");
+            }
+            else
+            {
+                entity.Title = quote.Title;
+                entity.Author = quote.Author;
+                entity.Desription = quote.Desription;
+                _quotesDbContext.SaveChanges();
+                return Ok("Record created successfully");
+            }
+            
         }
 
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
             var entity = _quotesDbContext.Quotes.Find(id);
-            _quotesDbContext.Quotes.Remove(entity);
-            _quotesDbContext.SaveChanges();
+            if (entity == null)
+            {
+                return NotFound("Quote against that id is not found.....");
+            }
+            else
+            {
+                _quotesDbContext.Quotes.Remove(entity);
+                _quotesDbContext.SaveChanges();
+                return Ok("Quote created successfully");
+            }
         }
     }
 }
