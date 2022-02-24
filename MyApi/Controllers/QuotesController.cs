@@ -10,9 +10,9 @@ namespace MyApi.Controllers
     [ApiController]
     public class QuotesController : ControllerBase
     {
-        private QuotesDBContext _quotesDbContext;
+        private QuotesDbContext _quotesDbContext;
 
-        public QuotesController(QuotesDBContext quotesDbContext)
+        public QuotesController(QuotesDbContext quotesDbContext)
         {
             _quotesDbContext = quotesDbContext;
         }

@@ -34,12 +34,13 @@ namespace MyApi
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MyApi", Version = "v1" });
             });
-            services.AddDbContext<QuotesDBContext>(option =>
+            services.AddDbContext<QuotesDbContext>(option =>
                 option.UseSqlServer(@"Data Source = (localdb)\MSSQLLocalDB;Initial Catalog = QuotesDB"));
+            services.AddMvc().AddXmlSerializerFormatters();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, QuotesDBContext quotesDbContext)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, QuotesDbContext quotesDbContext)
         {
             if (env.IsDevelopment())
             {
@@ -50,6 +51,7 @@ namespace MyApi
 
             app.UseHttpsRedirection();
 
+            quotesDbContext.Database.Migrate();
             quotesDbContext.Database.EnsureCreated();
 
             app.UseRouting();

@@ -5,9 +5,9 @@ namespace MyApi.Data
 {
     //Perform CRUD operation on the dataBase
     //Set a connection string in order to work with the database
-    public class QuotesDBContext : DbContext
+    public class QuotesDbContext : DbContext
     {
-        public QuotesDBContext(DbContextOptions<QuotesDBContext> options):base(options)
+        public QuotesDbContext(DbContextOptions<QuotesDbContext> options):base(options)
         {
             
         }
