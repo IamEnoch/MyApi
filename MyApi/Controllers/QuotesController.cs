@@ -41,6 +41,14 @@ namespace MyApi.Controllers
             }
         }
 
+        //Decorated the test method with a HttpGet attribute and changed the route by adding the action token in order not to conflict with 
+        //the get method
+        [HttpGet("[action]/{id}")]
+        public int Test(int id)
+        {
+            return id;
+        }
+
         [HttpPost]
         public IActionResult Post([FromBody]Quote quote)
         {
