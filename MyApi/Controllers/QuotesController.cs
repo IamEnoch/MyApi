@@ -6,6 +6,7 @@ using MyApi.Data;
 
 namespace MyApi.Controllers
 {
+    //controller handles incoming http requests and sends response back to the caller
     [Route("api/[controller]")]
     [ApiController]
     public class QuotesController : ControllerBase
@@ -28,6 +29,7 @@ namespace MyApi.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
+
             var quote = _quotesDbContext.Quotes.Find(id);
             if (quote == null)
             {
@@ -43,7 +45,7 @@ namespace MyApi.Controllers
         public IActionResult Post([FromBody]Quote quote)
         {
 
-            var _quote = _quotesDbContext.Quotes.Add(quote);
+            _quotesDbContext.Quotes.Add(quote);
             _quotesDbContext.SaveChanges();
             return StatusCode(StatusCodes.Status201Created);
         }
