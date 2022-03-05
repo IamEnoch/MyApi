@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MyApi.Models;
 using System.Collections.Generic;
+using System.Linq;
 using MyApi.Data;
 
 namespace MyApi.Controllers
@@ -20,9 +21,23 @@ namespace MyApi.Controllers
 
         //Get all quotes
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult Get(string sort)
         {
-            return Ok(_quotesDbContext.Quotes);
+            IQueryable<Quote> quotes;
+            switch (sort)
+            {
+                case "desc":
+                    quotes = _quotesDbContext.Quotes.OrderByDescending(p => p.CreatedAt);
+                    break;
+                case "asc":
+                    quotes = _quotesDbContext.Quotes.OrderBy(p => p.CreatedAt);
+                    break;
+                default:
+                    quotes = _quotesDbContext.Quotes;
+                    break;
+            }
+
+            return Ok(quotes);
         }
 
         //Get: a particular quote
