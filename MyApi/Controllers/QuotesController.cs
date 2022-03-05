@@ -40,6 +40,17 @@ namespace MyApi.Controllers
             return Ok(quotes);
         }
 
+        [HttpGet ("[action]")]
+        public IActionResult PagingQuote(int? pageNumber, int? pageSize)
+        {
+            var quotes = _quotesDbContext.Quotes;
+
+            var defaultPageNumber = pageNumber ?? 1;
+            var defaultPageSize = pageSize ?? 2;
+
+            return Ok(quotes.Skip((defaultPageNumber - 1) * defaultPageSize).Take(defaultPageSize));
+        }
+
         //Get: a particular quote
         [HttpGet("{id}")]
         public IActionResult Get(int id)
