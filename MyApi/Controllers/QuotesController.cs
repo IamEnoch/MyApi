@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyApi.Models;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.CodeAnalysis;
 using MyApi.Data;
 
 namespace MyApi.Controllers
@@ -21,6 +22,7 @@ namespace MyApi.Controllers
 
         //Get all quotes
         [HttpGet]
+        [ResponseCache (Duration = 60 , Location = ResponseCacheLocation.Any)]
         public IActionResult Get(string sort)
         {
             IQueryable<Quote> quotes;

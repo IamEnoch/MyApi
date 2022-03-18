@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using MyApi.Data;
 
@@ -37,6 +38,18 @@ namespace MyApi
             services.AddDbContext<QuotesDbContext>(option =>
                 option.UseSqlServer(@"Data Source = (localdb)\MSSQLLocalDB;Initial Catalog = QuotesDB"));
             services.AddMvc().AddXmlSerializerFormatters();
+            services.AddResponseCaching(); //register our middleware (responsible for response caching)
+
+            // 1. Add Authentication Services
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.Authority = "https://bifrostapis.us.auth0.com/";
+                options.Audience = "https://localhost:44388/";
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,6 +75,10 @@ namespace MyApi
             {
                 endpoints.MapControllers();
             });
+            app.UseResponseCaching();//Let the api use the service registered
+
+            // 2. Enable authentication middleware
+            app.UseAuthentication();
         }
     }
 }
